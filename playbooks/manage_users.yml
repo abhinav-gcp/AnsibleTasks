@@ -1,0 +1,17 @@
+---
+- name: Manage user accounts on remote server
+  hosts: all
+  become: true
+
+  tasks:
+  - name: Create a new user
+    user:
+      name: newuser
+      password: "{{ 'mypass' | password_hash('sha512') }}"
+      state: present
+
+  - name: Ensure user has sudo privileges
+    lineinfile:
+      dest: /etc/sudoers
+      line: 'newuser ALL=(ALL) NOPASSWD: ALL'
+      state: present
